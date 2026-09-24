@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickCrate | Premium Student Tech Accessories</title>
+    <!-- FIXED LINE BELOW: loads the actual styling engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://googleapis.com');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0b0c; color: #e4e4e7; }
+        .glow-accent { text-shadow: 0 0 20px rgba(163, 230, 53, 0.5); }
+        .amazon-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); border-color: #27272a; }
+        .amazon-card:hover { transform: translateY(-4px); border-color: #a3e635; box-shadow: 0 10px 30px -10px rgba(163,230,53,0.15); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="border-b border-zinc-800 bg-zinc-950 sticky top-0 z-50 px-4 md:px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-6">
+            <button onclick="switchView('home')" class="flex items-center gap-2 group bg-transparent border-0 cursor-pointer text-left p-0">
+                <span class="text-lime-400 text-2xl font-black glow-accent group-hover:scale-110 transition-transform">♦</span>
+                <span class="text-2xl font-extrabold text-white tracking-tight">ClickCrate</span>
+            </button>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
+                <button onclick="switchView('home')" class="hover:text-lime-400 transition-colors bg-transparent border-0 cursor-pointer">Storefront Home</button>
+                <a href="#catalog-header" class="hover:text-lime-400 transition-colors">Browse Marketplace</a>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button onclick="switchView('home')" class="text-zinc-400 hover:text-white font-semibold text-sm px-3 py-2 rounded-lg transition-colors bg-transparent border-0 cursor-pointer">Home</button>
+            <button onclick="switchView('basket')" class="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 px-5 py-2.5 rounded-xl flex items-center gap-2 text-sm text-white font-bold transition-all">
+                <span>🛒 Basket</span>
+                <span id="global-cart-badge" class="bg-lime-400 text-black text-xs font-black px-2 py-0.5 rounded-md">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-7xl mx-auto w-full flex-grow p-4 md:p-8">
+        
+        <!-- VIEW 1: HOMEPAGE GRID -->
+        <div id="view-home" class="space-y-12">
+            <!-- Hero Component -->
+            <header class="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 md:p-12 grid md:grid-cols-2 gap-8 items-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-lime-400/5 rounded-full blur-[100px]"></div>
+                <div class="space-y-6 relative z-10">
+                    <span class="bg-zinc-900 border border-zinc-800 text-lime-400 font-mono text-xs font-bold px-3 py-1.5 rounded-full">Student Store Active</span>
+                    <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-none">
+                        Gear that keeps up with your <span class="text-lime-400 glow-accent">reflexes.</span>
+                    </h1>
+                    <p class="text-zinc-400 max-w-md text-sm md:text-base">
+                        High-performance peripherals, mechanical docks, and protective armor kits built to level up your dorm gaming setup.
+                    </p>
+                    <button onclick="document.getElementById('catalog-header').scrollIntoView({behavior: 'smooth'})" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/20">Shop the drop</button>
+                </div>
+                <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 aspect-[4/3] flex flex-col justify-between relative overflow-hidden group">
+                    <div class="absolute top-4 right-4 flex gap-1.5">
+                        <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                        <span class="w-3 h-3 rounded-full bg-lime-400 shadow-[0_0_10px_#a3e635]"></span>
+                    </div>
+                    <img src="Screenshot 2026-09-24 10.20.02.png" class="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500" alt="ClickCrate Core Product Asset">
+                </div>
+            </header>
+
+            <!-- Catalog Section -->
+            <div class="space-y-8">
+                <div id="catalog-header" class="border-b border-zinc-800 pb-4">
+                    <h2 class="text-2xl font-black text-white">ClickCrate Student Tech Marketplace</h2>
+                    <p class="text-zinc-500 text-xs mt-1">Click any item card to see specifications and add to your local shopping basket.</p>
+                </div>
+                
+                <div id="product-display-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Generation -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: BASKET TAB -->
+        <div id="view-basket" class="hidden space-y-8">
+            <div class="border-b border-zinc-800 pb-4">
+                <h2 class="text-3xl font-black text-white">Your Shopping Basket</h2>
+                <p class="text-zinc-500 text-xs mt-1">Review your hardware items before finalizing your student order.</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8 items-start">
+                <div id="basket-items-feed" class="lg:col-span-2 space-y-4"></div>
+                
+                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 space-y-6">
+                    <h3 class="text-lg font-bold text-white border-b border-zinc-800 pb-2">Order Summary</h3>
+                    
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-white">Student Verification</h4>
+                            <p class="text-[10px] text-zinc-500">Toggle instant 20% campus discount</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="student-toggle-switch" onchange="updateTotals()" class="sr-only peer">
+                            <div class="w-9 h-5 bg-zinc-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-lime-400"></div>
+                        </label>
+                    </div>
+
+                    <div class="space-y-3 text-sm text-zinc-400">
+                        <div class="flex justify-between"><span>Items Subtotal:</span><span id="subtotal-box" class="text-white">\$0.00</span></div>
+                        <div id="discount-box-row" class="flex justify-between text-lime-400 hidden"><span>Dorm Markdown (20%):</span><span id="discount-box">-\$0.00</span></div>
+                        <div class="flex justify-between"><span>Dormway Delivery:</span><span class="text-lime-400 font-bold">FREE</span></div>
+                        <div class="flex justify-between text-white font-extrabold text-lg pt-3 border-t border-zinc-800">
+                            <span>Order Total:</span>
+                            <span id="total-box" class="text-lime-400 glow-accent">\$0.00</span>
+                        </div>
+                    </div>
+
+                    <button onclick="processCheckout()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/10 text-sm">Proceed to Secure Checkout</button>
+                    <button onclick="switchView('home')" class="w-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 text-xs font-medium py-2 rounded-lg transition-colors bg-transparent border-0 cursor-pointer">← Keep Shopping</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: SUCCESS RECEIPT -->
+        <div id="view-success" class="hidden max-w-xl mx-auto text-center py-16 space-y-6">
+            <div class="w-20 h-20 bg-lime-400/10 text-lime-400 rounded-full flex items-center justify-center text-4xl mx-auto">✓</div>
+            <h2 class="text-3xl font-black text-white">Order Confirmed!</h2>
+            <p class="text-zinc-400 text-sm">Your drop package will be shipped directly to your dorm locker workspace.</p>
+            <button onclick="switchView('home')" class="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold px-6 py-3 rounded-xl transition-all text-sm inline-block bg-transparent cursor-pointer">Return to Storefront</button>
+        </div>
+    </div>
+
+    <footer class="border-t border-zinc-800 bg-zinc-950 px-6 py-8 text-center text-xs text-zinc-600 mt-12">
+        <p>&copy; 2026 ClickCrate Gear. Built via Chromebook Dev Cloud. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const catalogProducts = [
+            { id: 1, name: "Honeycomb Matrix RGB Mouse", category: "Mice", price: 39.99, desc: "Peak ultra-lightweight cutout structure optimized for maximum airflow configuration.", img: "Screenshot 2026-09-24 10.20.02.png" },
+            { id: 2, name: "Lightning Crackle Wired Mouse", category: "Mice", price: 24.99, desc: "High-DPI optic precision shell covered in a vivid reactive neon crackle design.", img: "Screenshot 2026-09-24 10.21.22.png" },
+            { id: 3, name: "Crimson Red Striker Wireless", category: "Mice", price: 34.99, desc: "Ergonomic matte finish built with long battery life and secure USB nano receiver.", img: "Screenshot 2026-09-24 10.23.07.png" },
+            { id: 4, name: "Klipdasse 4-Port Joy-Con Charger", category: "Stands", price: 19.99, desc: "Simultaneous multi-dock designed to plug directly into console dock side panels.", img: "Screenshot 2026-09-24 10.27.06.png" },
+            { id: 5, name: "KDD Universal Headset RGB Dock", category: "Stands", price: 29.99, desc: "Heavy-duty base holding active dual controller arrays and primary audio headsets.", img: "Screenshot 2026-09-24 10.30.32.png" },
+            { id: 6, name: "Cyberpunk Sigil Shield Shell", category: "Cases", price: 14.99, desc: "Premium anti-slip soft silicone sleeve displaying stylized robotic line markers.", img: "Screenshot 2026-09-24 10.33.02.png" },
+            { id: 7, name: "Hex Combat Armor Controller Skin", category: "Cases", price: 15.99, desc: "Heavy sweat-resistant grid patterns built specifically for PlayStation 5 handles.", img: "Screenshot 2026-09-24 11.00.03.png" },
+            { id: 8, name: "Symbiote Venomized Case Variant", category: "Cases", price: 16.99, desc: "Striking black and red split design molded for high-performance controller protection.", img: "Screenshot 2026-09-24 11.04.09.png" },
+            { id: 9, name: "Cosmic Nebula Graphic Desk Mat", category: "Mats", price: 29.99, desc: "Oversized deep space vector graphics surrounded by a custom overlocked stitched border.", img: "Screenshot 2026-09-24 11.07.46.png" },
+            { id: 10, name: "Lunar Waves Graphic Desk Mat", category: "Mats", price: 27.99, desc: "Ultra-thick heavy rubber padding rendering striking icy moon ocean currents.", img: "Screenshot 2026-09-24 11.09.29.png" },
+            { id: 11, name: "Ink-Wash Samurai Sun Desk Mat", category: "Mats", price: 28.99, desc: "Minimalist desktop canvas showcasing classic calligraphy warrior silhouettes.", img: "Screenshot 2026-09-24 11.37.16.png" }
+        ];
+
+        let localBasket = [];
+
+        function buildStorefront() {
+            const displayGrid = document.getElementById('product-display-grid');
+            displayGrid.innerHTML = catalogProducts.map(p => `
+                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-5 flex flex-col justify-between space-y-4 amazon-card group">
+                    <div class="bg-zinc-900/60 rounded-xl aspect-square flex items-center justify-center p-4 relative overflow-hidden border border-zinc-800/40">
+                        <span class="absolute top-2 left-2 bg-zinc-950 border border-zinc-800 text-[10px] text-zinc-400 font-bold px-2 py-0.5 rounded font-mono uppercase tracking-wider">${p.category}</span>
+                        <img src="${p.img}" class="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300" alt="${p.name}">
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-white font-extrabold text-base tracking-tight group-hover:text-lime-400 transition-colors">${p.name}</h3>
+                        <p class="text-zinc-500 text-xs line-clamp-2">${p.desc}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-zinc-900">
+                        <span class="text-white font-black text-lg">$${p.price.toFixed(2)}</span>
+                        <button onclick="addToBasket(${p.id})" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchView(viewName) {
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-basket').classList.add('hidden');
+            document.getElementById('view-success').classList.add('hidden');
+            if(viewName === 'home') document.getElementById('view-home').classList.remove('hidden');
+            if(viewName === 'basket') {
+                document.getElementById('view-basket').classList.remove('hidden');
+                buildBasketUI();
+            }
+            if(viewName === 'success') document.getElementById('view-success').classList.remove('hidden');
+        }
+
+        function addToBasket(productId) {
+            const targetItem = catalogProducts.find(p => p.id === productId);
+            const exists = localBasket.find(b => b.id === productId);
+            if(exists) exists.qty += 1; else localBasket.push({ ...targetItem, qty: 1 });
+            updateBadges();
+        }
+
+        function removeFromBasket(productId) {
+            localBasket = localBasket.filter(b => b.id !== productId);
+            buildBasketUI();
+            updateBadges();
+        }
+
+        function changeQty(productId, delta) {
+            const target = localBasket.find(b => b.id === productId);
+            if(target) {
+                target.qty += delta;
+                if(target.qty <= 0) { removeFromBasket(productId); return; }
+            }
+            buildBasketUI();
+            updateBadges();
+        }
+
+        function updateBadges() {
+            document.getElementById('global-cart-badge').innerText = localBasket.reduce((sum, item) => sum + item.qty, 0);
+        }
+
+        function buildBasketUI() {
+            const itemsFeed = document.getElementById('basket-items-feed');
+            if(localBasket.length === 0) {
+                itemsFeed.innerHTML = `
+                    <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-8 text-center space-y-4">
+                        <h3 class="text-white font-bold">Your shopping basket is empty</h3>
+                        <button onclick="switchView('home')" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl border border-zinc-800 bg-transparent border-0 cursor-pointer">Return to Storefront</button>
+                    </div>`;
+                updateTotals();
+                return;
+            }
+
+            itemsFeed.innerHTML = localBasket.map(b => `
+                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4 justify-between">
+                    <div class="flex items-center gap-4 w-full">
+                        <img src="${b.img}" class="w-16 h-16 object-contain bg-zinc-900 rounded border border-zinc-800" alt="${b.name}">
+                        <div>
+                            <h3 class="text-white font-bold text-sm">${b.name}</h3>
+                            <p class="text-zinc-500 text-xs">$${b.price.toFixed(2)} ea</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+                            <button onclick="changeQty(${b.id}, -1)" class="px-2 py-1 text-zinc-400 font-bold bg-transparent border-0 cursor-pointer">-</button>
+                            <span class="px-3 text-white text-xs font-mono">${b.qty}</span>
+                            <button onclick="changeQty(${b.id}, 1)" class="px-2 py-1 text-zinc-400 font-bold bg-transparent border-0 cursor-pointer">+</button>
+                        </div>
+                        <span class="text-white font-bold font-mono text-sm">$${(b.price * b.qty).toFixed(2)}</span>
+                        <button onclick="removeFromBasket(${b.id})" class="text-zinc-500 hover:text-red-400 text-xs bg-transparent border-0 cursor-pointer">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateTotals();
+        }
+
+        function updateTotals() {
+            let subtotal = localBasket.reduce((sum, b) => sum + (b.price * b.qty), 0);
+            const isStudent = document.getElementById('student-toggle-switch').checked;
+            let discount = isStudent ? subtotal * 0.20 : 0;
+            if(isStudent) document.getElementById('discount-box-row').classList.remove('hidden'); else document.getElementById('discount-box-row').classList.add('hidden');
+            document.getElementById('subtotal-box').innerText = `$${subtotal.toFixed(2)}`;
+            document.getElementById('discount-box').innerText = `-$${discount.toFixed(2)}`;
+            document.getElementById('total-box').innerText = `$${(subtotal - discount).toFixed(2)}`;
+        }
+
+        function processCheckout() {
+            if(localBasket.length === 0) return;
+            localBasket = [];
+            updateBadges();
+            switchView('success');
+        }
+
+        buildStorefront();
+    </script>
+</body>
+</html>
